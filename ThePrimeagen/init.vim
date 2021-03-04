@@ -1,194 +1,149 @@
-call plug#begin('~/.vim/plugged')
+let mapleader=" "
+filetype plugin on
+set encoding=UTF-8
+syntax on
+set autoread
+set updatetime=300
+set showmode
+set wildmenu
+set wildignorecase
 
-" Yes, I am a sneaky snek now
-Plug 'ambv/black'
+set autoindent
+set cindent
+set smartindent
+set noswapfile
+set nobackup
+set ignorecase
+set number relativenumber
+set ruler
+set numberwidth=4
+set hidden
+set cursorline
+set scrolloff=10
 
-" Plebvim lsp Plugins
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'tjdevries/nlua.nvim'
-Plug 'tjdevries/lsp_extensions.nvim'
+set splitright
+set splitbelow
 
-" Neovim Tree shitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
+inoremap jk <ESC>
 
-" Debugger Plugins
-Plug 'puremourning/vimspector'
-Plug 'szw/vim-maximizer'
+highlight! ExtraWhitespace guibg='#50FA7B'
 
-" THANKS BFREDL
-Plug '/home/mpaulson/personal/contextprint.nvim'
-Plug '/home/mpaulson/personal/af-pluth-pluth'
+" Movement for split windows
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
 
-Plug 'rust-lang/rust.vim'
-Plug 'tweekmonster/gofmt.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-Plug 'vim-utils/vim-man'
-Plug 'mbbill/undotree'
-Plug 'vuciv/vim-bujo'
-Plug 'tpope/vim-dispatch'
-Plug 'theprimeagen/vim-be-good'
-Plug '/home/theprimeagen/personal/af-pluth-pluth'
-Plug 'gruvbox-community/gruvbox'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'tpope/vim-projectionist'
+" Resize windows quickly
+map <silent><a-h> :vertical resize -1<cr>
+map <silent><a-j> :resize +1<cr>
+map <silent><a-k> :resize -1<cr>
+map <silent><a-l> :vertical resize +1<cr>
 
+" Tab Options
+set shiftwidth=4
+set tabstop=4
+set softtabstop=0
+set expandtab
 
+"This unsets the "last search pattern" register by hitting return
+nnoremap <silent><ESC><ESC> :noh<CR>
 
+" Disable automatic comment continuation
+autocmd! FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
+" Source Vim configuration file and install plugins
+nnoremap <silent><leader>rrc :source ~/.config/nvim/init.vim \| :PlugInstall<CR>
+nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
+nnoremap <leader>b :buffers<CR>:b 
+nnoremap <c-6> :call feedkeys("\<c-^")<CR>
 
+call plug#begin()
 
+Plug 'morhetz/gruvbox'
+Plug 'kyazdani42/nvim-tree.lua'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'vim-airline/vim-airline'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-surround'
+Plug 'tomasiser/vim-code-dark'
+Plug 'jiangmiao/auto-pairs'
 
-
-
-
-
-
-
-
-
-" telescope requirements...
+" Telescope
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
+" JAVASCRIPT
+Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'maxmellon/vim-jsx-pretty'
 
+" neovim-lsp
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"  I AM SO SORRY FOR DOING COLOR SCHEMES IN MY VIMRC, BUT I HAVE
-"  TOOOOOOOOOOOOO
-
-Plug 'colepeters/spacemacs-theme.vim'
-Plug 'sainnhe/gruvbox-material'
-Plug 'phanviet/vim-monokai-pro'
-Plug 'flazz/vim-colorschemes'
-Plug 'chriskempson/base16-vim'
-Plug 'dracula/vim', { 'as': 'dracula' }
-" Plug '/home/mpaulson/personal/VimDeathmatch/client'
-
-" HARPOON!!
-Plug '/home/theprimeagen/personal/harpoon'
-Plug '/home/mpaulson/personal/rfc-reader'
-Plug 'mhinz/vim-rfc'
-
-" prettier
-Plug 'sbdchd/neoformat'
+" Tree sitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 call plug#end()
 
-" let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
+colorscheme gruvbox
+set background=dark
 
-lua require'nvim-treesitter.configs'.setup { highlight = { enable = true } }
+" =========== File Tree ========
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
+let g:nvim_tree_follow = 1
+let g:nvim_tree_bindings = {
+    \ 'edit':            ['<CR>', 'o', 'l'],
+    \ 'close_node':      ['<S-CR>', '<BS>', 'h'],
+    \ }
 
-let g:vim_be_good_log_file = 1
-let g:vim_apm_log = 1
+" =========== FZF =============
+" Always enable preview window on the right with 60% width
+let g:fzf_preview_window = 'right:40%'
+nmap <leader>p :GFiles<CR>
 
-if executable('rg')
-    let g:rg_derive_root='true'
-endif
+" =========== Telescope config ==========
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-let loaded_matchparen = 1
-let mapleader = " "
+" ============== LSP ===========
+" ///////////// Key Bindings //////////
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gt   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
 
-nnoremap <leader>ghw :h <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>bs /<C-R>=escape(expand("<cWORD>"), "/")<CR><CR>
-nnoremap <leader>u :UndotreeShow<CR>
-nnoremap <leader>pv :Sex!<CR>
-nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
-nnoremap <Leader>+ :vertical resize +5<CR>
-nnoremap <Leader>- :vertical resize -5<CR>
-nnoremap <Leader>rp :resize 100<CR>
-nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
-nnoremap <Leader>cpu a%" PRIu64 "<esc>
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
+" ///////////// Auto Completion //////
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" greatest remap ever
-vnoremap <leader>p "_dP
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
 
-" next greatest remap ever : asbjornHaland
-nnoremap <leader>y "+y
-vnoremap <leader>y "+y
-nnoremap <leader>Y gg"+yG
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
+let g:completion_matching_ignore_case = 1
 
-nnoremap <leader>d "_d
-vnoremap <leader>d "_d
+" ///////////// Typescript ///////////
+lua <<EOF
+    require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
 
-" vim TODO
-nmap <Leader>tu <Plug>BujoChecknormal
-nmap <Leader>th <Plug>BujoAddnormal
-let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
-
-nnoremap <Leader>ww ofunction wait(ms: number): Promise<void> {<CR>return new Promise(res => setTimeout(res, ms));<CR>}<esc>k=i{<CR>
-
-inoremap <C-c> <esc>
-
-fun! EmptyRegisters()
-    let regs=split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
-    for r in regs
-        call setreg(r, [])
-    endfor
-endfun
-
-fun! TrimWhitespace()
-    let l:save = winsaveview()
-    keeppatterns %s/\s\+$//e
-    call winrestview(l:save)
-endfun
-
-" ES
-com! W w
-
-nmap <leader>nn :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
-augroup highlight_yank
-    autocmd!
-    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({timeout = 40})
-augroup END
-
-augroup THE_PRIMEAGEN
-    autocmd!
-    autocmd BufWritePre * :call TrimWhitespace()
-    autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
-augroup END
-
-lua << EOF
-
-function sort_qf_gatsby(a, b)
-    local a_num = tonumber(a.text(8, #a.text - 2))
-    local b_num = tonumber(b.text(8, #b.text - 2))
-
-    print(a.text, a_num, b.text, b_num)
-
-    if a_num > b_num then
-        return 1
-    end
-    return -1
-end
+    require'nvim-treesitter.configs'.setup {
+      highlight = {
+          enable = true,              -- false will disable the whole extension
+      },
+    }
 EOF
-
